@@ -7,6 +7,8 @@
         <module>server</module>
         <module>common</module>
         <module>gate-way</module>
+        <module>cluster</module>
+        <module>core</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -22,7 +24,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <log4j.version>2.6.2</log4j.version>
+        <log4j.version>2.11.2</log4j.version>
         <netty.version>4.1.32.Final</netty.version>
         <junit.version>4.12</junit.version>
     </properties>
