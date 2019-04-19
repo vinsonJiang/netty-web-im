@@ -21,6 +21,14 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.21</version>
         </dependency>
+
+        <!-- REDISSON -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
     </dependencies>
 
 
