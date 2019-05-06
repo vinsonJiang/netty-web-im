@@ -10,6 +10,9 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
+import io.vinson.im.server.ServerApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: websocket server 启动类
@@ -19,10 +22,12 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
  */
 public final class WebSocketServer {
 
-    public static final boolean SSL = System.getProperty("ssl") != null;
-    public static final int PORT = Integer.parseInt(System.getProperty("port", SSL? "8443" : "8080"));
+    private static Logger logger = LoggerFactory.getLogger(ServerApplication.class);
 
-    public static void main(String[] args) throws Exception {
+    public static final boolean SSL = System.getProperty("ssl") != null;
+    public static final int PORT = Integer.parseInt(System.getProperty("port", SSL? "8443" : "8081"));
+
+    public static void start() throws Exception {
         final SslContext sslCtx;
         if (SSL) {
             SelfSignedCertificate ssc = new SelfSignedCertificate();
@@ -41,7 +46,7 @@ public final class WebSocketServer {
                     .childHandler(new WebSocketServerInitializer(sslCtx));
 
             Channel ch = b.bind(PORT).sync().channel();
-            System.out.println("项目启动，url:" + (SSL? "https" : "http") + "://127.0.0.1:" + PORT + '/');
+            logger.warn("项目启动，url:" + (SSL? "https" : "http") + "://127.0.0.1:" + PORT + '/');
             ch.closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
