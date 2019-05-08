@@ -46,7 +46,7 @@ public final class WebSocketServer {
                     .childHandler(new WebSocketServerInitializer(sslCtx));
 
             Channel ch = b.bind(PORT).sync().channel();
-            logger.warn("项目启动，url:" + (SSL? "https" : "http") + "://127.0.0.1:" + PORT + '/');
+            logger.warn("websocket startup，url: " + (SSL? "https" : "http") + "://127.0.0.1:" + PORT + '/');
             ch.closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
