@@ -9,6 +9,7 @@
         <module>gate-way</module>
         <module>cluster</module>
         <module>core</module>
+        <module>eureka-server</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
