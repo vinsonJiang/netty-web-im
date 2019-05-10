@@ -8,7 +8,18 @@ import io.netty.buffer.Unpooled;
  * @date: 2019/5/9
  */
 public class DefaultMessageData extends MessageData {
-    public DefaultMessageData() {
-        super(Unpooled.buffer(0));
+
+    private final int cmd;
+
+    private final byte[] buf;
+
+    public DefaultMessageData(int cmd, byte[] buf, ByteBuf content) {
+        super(content);
+        this.cmd = cmd;
+        this.buf = buf;
+    }
+
+    public DefaultMessageData(int cmd, byte[] buf) {
+        this(cmd, buf, Unpooled.buffer(0));
     }
 }
