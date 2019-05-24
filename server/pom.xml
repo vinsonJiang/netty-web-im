@@ -12,9 +12,17 @@
     <artifactId>server</artifactId>
 
     <properties>
+        <main.class.name/>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <lib.path>my_lib</lib.path>
+        <protoc.path>/data/local/protobuf-3.4.0/bin/protoc</protoc.path>
+        <netty.version>4.1.32.Final</netty.version>
+        <package.dir>${project.basedir}/target/packages</package.dir>
+
     </properties>
 
     <dependencyManagement>
@@ -68,7 +76,119 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-config-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.6.1</version>
+        </dependency>
 
     </dependencies>
+    <repositories>
+        <repository>
+            <id>inner-local-maven-repo</id>
+            <url>file:///${project.basedir}/src/main/resources/lib</url>
+        </repository>
+    </repositories>
+    <build>
+        <!-- 资源管理 -->
+        <resources>
+            <!-- 通用资源 -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>lib/**</exclude>
+                </excludes>
+            </resource>
+            <!-- WebRoot -->
+            <!--<resource>-->
+                <!--<directory>WebRoot</directory>-->
+                <!--<targetPath>${package.dir}/WebRoot</targetPath>-->
+            <!--</resource>-->
+        </resources>
+        <plugins>
+            <!-- 打包并指定入口 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>WebRoot/**</exclude>
+                    </excludes>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>${lib.path}/</classpathPrefix>
+                            <mainClass>io.vinson.im.server.ServerApplication</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>${lib.path}/xx.jar ${lib.path}/xxx.jar</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                    <outputDirectory>
+                        ${package.dir}
+                    </outputDirectory>
+                </configuration>
+            </plugin>
+            <!-- 导出依赖到指定classpath -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${package.dir}/${lib.path}</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12.4</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.5.9</version>
+                <configuration>
+                    <!-- 是否把proto文件打包进jar文件 -->
+                    <attachProtoSources>false</attachProtoSources>
+                    <protoSourceRoot>${basedir}/proto/</protoSourceRoot>
+                    <protocExecutable>${protoc.path}</protocExecutable>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+        <finalName>NIM</finalName>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>local_protoc_path</id>
+            <properties>
+                <protoc.path>C:\dev\runner\protoc.exe</protoc.path>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

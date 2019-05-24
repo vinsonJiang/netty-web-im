@@ -1,0 +1,8 @@
+option java_package = "io.vinson.im.server.protocol";
+option java_outer_classname = "BaseProtos";
+
+
+message IntStringPB {
+    optional    sint32          num            = 1;//数值
+    optional    string          str            = 2;//字符串
+}

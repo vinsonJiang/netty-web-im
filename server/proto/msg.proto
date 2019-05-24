@@ -1,0 +1,8 @@
+option java_package = "io.vinson.im.server.protocol";
+option java_outer_classname = "MsgProtos";
+import "base.proto";
+
+
+message SimpleMessageRes {
+    optional    IntStringPB      num            = 1;//数值
+}
